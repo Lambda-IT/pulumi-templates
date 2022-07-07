@@ -1,0 +1,19 @@
+name: web-app
+runtime: nodejs
+description: A Lambda quick deployment project
+template:
+  config:
+    kubernetes:context:
+      description: On which context will it run
+      default: lambda
+    web-app:environment:
+      description: The environment of the project
+      default: dev
+    web-app:identifier:
+      description: Consists of "{project}-{branch}"
+    web-app:version:
+      description: The version used for the container image
+      default: latest
+    web-app:registry-secret:
+      description: The credentials used to connect to the container registry
+      secret: true
