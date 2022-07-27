@@ -11,11 +11,13 @@ template:
     web-app:environment:
       description: The environment of the project
       default: dev
-    web-app:identifier:
-      description: An identifier for the project
+    web-app:project:
+      description: The project name used in metadata
+    web-app:container-image:
+      description: The full image path containing the web-app setup without version
     web-app:url:
-      description: The url used for the deployment
-      default: "_(will be set to {identifier}.app.lambda-it.ch)"
+      description: The url used for the deployment, defaults to {identifier}.app.lambda-it.ch"
+      default: ""
     web-app:version:
       description: The version used for the container image
       default: latest

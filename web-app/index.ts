@@ -13,7 +13,7 @@ const environment = cfg.require("environment");
 const project = cfg.require("project");
 const containerImage = cfg.require("container-image");
 const version = cfg.require("version");
-const url = cfg.get("url") ?? `${project}.app.lambda-it.ch`;
+const url = cfg.get("url") || `${project}.app.lambda-it.ch`;
 const namespace = cfg.require("namespace");
 
 const app = "web-app";
@@ -30,7 +30,7 @@ const registrySecret = cfg.requireSecret("registry-secret");
 
 const genericConfig: InitPulumiConfig = {
   appUrls: [url],
-  dockerImage: containerImage,
+  dockerImage: `${containerImage}:${version}`,
   labels: {
     project,
     app,
