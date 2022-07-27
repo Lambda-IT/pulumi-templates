@@ -1,13 +1,13 @@
 {
     "name": "parlamentsdienst",
     "devDependencies": {
-        "@types/node": "^18.0.0",
+        "@types/node": "^18.6.1",
         "mongodb-uri": "^0.9.7"
     },
     "dependencies": {
-        "@lambda-it/pulumi-lib": "^0.5.1",
-        "@pulumi/kubernetes": "^3.19.4",
+        "@lambda-it/pulumi-lib": "^0.5.4",
+        "@pulumi/kubernetes": "^3.20.2",
         "@pulumi/kubernetesx": "^0.1.6",
-        "@pulumi/pulumi": "^3.35.1"
+        "@pulumi/pulumi": "^3.36.0"
     }
 }

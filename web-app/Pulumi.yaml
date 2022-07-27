@@ -6,11 +6,16 @@ template:
     kubernetes:context:
       description: On which context will it run
       default: lambda
+    web-app:namespace:
+      description: The k8s namespace used for every resource
     web-app:environment:
       description: The environment of the project
       default: dev
     web-app:identifier:
-      description: Consists of "{project}-{branch}"
+      description: An identifier for the project
+    web-app:url:
+      description: The url used for the deployment
+      default: "_(will be set to {identifier}.app.lambda-it.ch)"
     web-app:version:
       description: The version used for the container image
       default: latest
