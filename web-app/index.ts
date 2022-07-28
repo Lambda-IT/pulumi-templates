@@ -13,10 +13,11 @@ const environment = cfg.require("environment");
 const project = cfg.require("project");
 const containerImage = cfg.require("container-image");
 const version = cfg.require("version");
-const url = cfg.get("url") || `${project}.app.lambda-it.ch`;
 const namespace = cfg.require("namespace");
+const url = cfg.get("url") || `${project}.app.lambda-it.ch`;
+const certCommonName = cfg.get("certificate-common-name");
 
-const app = "web-app";
+const app = "${PROJECT}";
 
 pulumi.log.info(`Project:             ${project}`);
 pulumi.log.info(`Container Image:     ${containerImage}`);
@@ -46,6 +47,11 @@ const genericConfig: InitPulumiConfig = {
 
 // Deployment APP
 const appConfiguration = new LambdaK8sConfiguration(genericConfig);
+
+if (certCommonName) {
+  appConfiguration.setCertificateCommonName(certCommonName);
+}
+
 const deployment = new LambdaK8SDeployment(appConfiguration)
   .addTraefikRoute("simple")
   .setCertificate("letsencrypt")

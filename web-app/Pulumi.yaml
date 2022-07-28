@@ -8,19 +8,20 @@ template:
       default: lambda
     web-app:namespace:
       description: The k8s namespace used for every resource
-    web-app:environment:
-      description: The environment of the project
-      default: dev
     web-app:project:
       description: The project name used in metadata
     web-app:container-image:
       description: The full image path containing the web-app setup without version
-    web-app:url:
-      description: The url used for the deployment, defaults to {identifier}.app.lambda-it.ch"
-      default: ""
-    web-app:version:
-      description: The version used for the container image
-      default: latest
     web-app:registry-secret:
       description: The credentials used to connect to the container registry
       secret: true
+    web-app:environment:
+      description: "The environment of the project"
+      default: dev
+    web-app:version:
+      description: "The version used for the container image"
+      default: latest
+    web-app:url:
+      description: "The url used for the deployment, default: ({project}.app.lambda-it.ch)"
+    web-app:certificate-common-name:
+      description: "The common name (CN) used for the certificate, default: ({url})"
