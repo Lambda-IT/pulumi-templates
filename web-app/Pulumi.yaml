@@ -10,6 +10,8 @@ template:
       description: The k8s namespace used for every resource
     web-app:project:
       description: The project name used in metadata
+    web-app:component:
+      description: The component name used in metadata
     web-app:container-image:
       description: The full image path containing the web-app setup without version
     web-app:registry-secret:

@@ -11,6 +11,7 @@ const cfg = new pulumi.Config();
 const clusterContext = new pulumi.Config("kubernetes").require("context");
 const environment = cfg.require("environment");
 const project = cfg.require("project");
+const component = cfg.get("component");
 const containerImage = cfg.require("container-image");
 const version = cfg.require("version");
 const namespace = cfg.require("namespace");
@@ -36,6 +37,7 @@ const genericConfig: InitPulumiConfig = {
     project,
     app,
     env: environment,
+    ...(component ? { component } : {}),
   },
   namespace,
   port: { containerPort: 80 },
