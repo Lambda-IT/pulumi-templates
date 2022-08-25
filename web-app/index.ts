@@ -1,7 +1,4 @@
-import {
-  LambdaK8sConfiguration,
-  LambdaK8SDeployment,
-} from "@lambda-it/pulumi-lib";
+import { LambdaK8sConfiguration, LambdaK8SDeployment } from "@lambda-it/pulumi-lib";
 import { InitPulumiConfig, RegistryName } from "@lambda-it/pulumi-lib/types";
 import * as pulumi from "@pulumi/pulumi";
 
@@ -16,7 +13,6 @@ const containerImage = cfg.require("container-image");
 const version = cfg.require("version");
 const namespace = cfg.require("namespace");
 const url = cfg.get("url") || `${project}.app.lambda-it.ch`;
-const certCommonName = cfg.get("certificate-common-name");
 
 const app = "${PROJECT}";
 
@@ -31,33 +27,29 @@ pulumi.log.info(`Requested Url:       ${url}`);
 const registrySecret = cfg.requireSecret("registry-secret");
 
 const genericConfig: InitPulumiConfig = {
-  appUrls: [url],
-  dockerImage: `${containerImage}:${version}`,
-  labels: {
-    project,
-    app,
-    env: environment,
-    ...(component ? { component } : {}),
-  },
-  namespace,
-  port: { containerPort: 80 },
-  registrySecret: {
-    name: RegistryName.HarborCR,
-    value: registrySecret,
-  },
+    appUrls: [url],
+    dockerImage: `${containerImage}:${version}`,
+    labels: {
+        project,
+        app,
+        env: environment,
+        ...(component ? { component } : {}),
+    },
+    namespace,
+    port: { containerPort: 80 },
+    registrySecret: {
+        name: RegistryName.HarborCR,
+        value: registrySecret,
+    },
 };
 
 // Deployment APP
 const appConfiguration = new LambdaK8sConfiguration(genericConfig);
 
-if (certCommonName) {
-  appConfiguration.setCertificateCommonName(certCommonName);
-}
-
 const deployment = new LambdaK8SDeployment(appConfiguration)
-  .addTraefikRoute("simple")
-  .setCertificate("letsencrypt")
-  .createRepository();
+    .addTraefikRoute("simple")
+    .setCertificate("letsencrypt")
+    .createRepository();
 
 // Create namespace if necessary
 deployment.createDeployment();

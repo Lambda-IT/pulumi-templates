@@ -6,24 +6,22 @@ template:
     kubernetes:context:
       description: On which context will it run
       default: lambda
-    web-app:namespace:
+    namespace:
       description: The k8s namespace used for every resource
-    web-app:project:
+    project:
       description: The project name used in metadata
-    web-app:component:
+    component:
       description: The component name used in metadata
-    web-app:container-image:
+    container-image:
       description: The full image path containing the web-app setup without version
-    web-app:registry-secret:
+    registry-secret:
       description: The credentials used to connect to the container registry
       secret: true
-    web-app:environment:
+    environment:
       description: "The environment of the project"
       default: dev
-    web-app:version:
+    version:
       description: "The version used for the container image"
       default: latest
-    web-app:url:
+    url:
       description: "The url used for the deployment, default: ({project}.app.lambda-it.ch)"
-    web-app:certificate-common-name:
-      description: "The common name (CN) used for the certificate, default: ({url})"
