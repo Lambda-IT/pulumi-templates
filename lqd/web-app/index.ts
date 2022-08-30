@@ -1,5 +1,9 @@
 import { LambdaK8sConfiguration, LambdaK8SDeployment } from "@lambda-it/pulumi-lib";
-import { InitPulumiConfig, RegistryName } from "@lambda-it/pulumi-lib/types";
+import {
+    InitPulumiConfig,
+    RegistryName,
+    SecretType,
+} from "@lambda-it/pulumi-lib/types";
 import * as pulumi from "@pulumi/pulumi";
 
 const cfg = new pulumi.Config();
@@ -48,7 +52,9 @@ const genericConfig: InitPulumiConfig = {
 
 const appConfiguration = new LambdaK8sConfiguration(genericConfig)
     .setCertificateCommonName(certCommonName)
-    .createOnePasswordSecret(onepassBasicAuthSecret, basicAuth);
+    .createOnePasswordSecret(onepassBasicAuthSecret, basicAuth, {
+        type: SecretType.KubernetesBasicAuth,
+    });
 
 const deployment = new LambdaK8SDeployment(appConfiguration)
     .addTraefikRoute("simple", onepassBasicAuthSecret)
