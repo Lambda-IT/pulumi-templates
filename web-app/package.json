@@ -6,7 +6,7 @@
         "mongodb-uri": "^0.9.7"
     },
     "dependencies": {
-        "@lambda-it/pulumi-lib": "^0.6.5",
+        "@lambda-it/pulumi-lib": "^0.6.6",
         "@pulumi/kubernetes": "^3.21.0",
         "@pulumi/kubernetesx": "^0.1.6",
         "@pulumi/pulumi": "^3.38.0"
