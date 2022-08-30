@@ -14,7 +14,7 @@ const version = cfg.require("version");
 const namespace = cfg.require("namespace");
 const certCommonName = cfg.require("certificate-common-name");
 const url = cfg.require("url");
-const basicAuth = cfg.get("onesignal-basic-auth");
+const basicAuth = cfg.get("onepassword-basic-auth");
 
 const app = "${PROJECT}";
 
