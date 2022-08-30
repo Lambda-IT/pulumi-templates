@@ -14,9 +14,10 @@ const version = cfg.require("version");
 const namespace = cfg.require("namespace");
 const certCommonName = cfg.require("certificate-common-name");
 const url = cfg.require("url");
-const basicAuth = cfg.get("onepassword-basic-auth");
+const basicAuth = cfg.require("onepassword-basic-auth");
 
 const app = "${PROJECT}";
+const onepassBasicAuthSecret = "onepass-basic-auth";
 
 pulumi.log.info(`Project:             ${project}`);
 pulumi.log.info(`Container Image:     ${containerImage}`);
@@ -45,12 +46,12 @@ const genericConfig: InitPulumiConfig = {
     },
 };
 
-const appConfiguration = new LambdaK8sConfiguration(
-    genericConfig
-).setCertificateCommonName(certCommonName);
+const appConfiguration = new LambdaK8sConfiguration(genericConfig)
+    .setCertificateCommonName(certCommonName)
+    .createOnePasswordSecret(onepassBasicAuthSecret, basicAuth);
 
 const deployment = new LambdaK8SDeployment(appConfiguration)
-    .addTraefikRoute("simple", basicAuth)
+    .addTraefikRoute("simple", onepassBasicAuthSecret)
     .setCertificate("letsencrypt")
     .createRepository();
 
