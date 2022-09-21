@@ -2,13 +2,13 @@
     "name": "${PROJECT}",
     "description": "${DESCRIPTION}",
     "devDependencies": {
-        "@types/node": "^18.7.14",
+        "@types/node": "^18.7.18",
         "mongodb-uri": "^0.9.7"
     },
     "dependencies": {
-        "@lambda-it/pulumi-lib": "^0.6.6",
-        "@pulumi/kubernetes": "^3.21.0",
+        "@lambda-it/pulumi-lib": "^0.6.11",
+        "@pulumi/kubernetes": "^3.21.2",
         "@pulumi/kubernetesx": "^0.1.6",
-        "@pulumi/pulumi": "^3.38.0"
+        "@pulumi/pulumi": "^3.40.1"
     }
 }

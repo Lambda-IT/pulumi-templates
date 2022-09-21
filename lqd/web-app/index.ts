@@ -1,9 +1,9 @@
-import { LambdaK8sConfiguration, LambdaK8SDeployment } from "@lambda-it/pulumi-lib";
 import {
-    InitPulumiConfig,
-    RegistryName,
-    SecretType,
-} from "@lambda-it/pulumi-lib/types";
+    Helper,
+    LambdaK8sConfiguration,
+    LambdaK8SDeployment,
+} from "@lambda-it/pulumi-lib";
+import * as types from "@lambda-it/pulumi-lib/types";
 import * as pulumi from "@pulumi/pulumi";
 
 const cfg = new pulumi.Config();
@@ -18,10 +18,9 @@ const version = cfg.require("version");
 const namespace = cfg.require("namespace");
 const certCommonName = cfg.require("certificate-common-name");
 const url = cfg.require("url");
-const basicAuth = cfg.require("onepassword-basic-auth");
+const basicAuth = cfg.require<types.OnePasswordUrl>("onepassword-basic-auth");
 
 const app = "${PROJECT}";
-const onepassBasicAuthSecret = "onepass-basic-auth";
 
 pulumi.log.info(`Project:             ${project}`);
 pulumi.log.info(`Container Image:     ${containerImage}`);
@@ -33,7 +32,7 @@ pulumi.log.info(`Requested Url:       ${url}`);
 
 const registrySecret = cfg.requireSecret("registry-secret");
 
-const genericConfig: InitPulumiConfig = {
+const genericConfig: types.InitPulumiConfig = {
     appUrls: [url],
     dockerImage: `${containerImage}:${version}`,
     labels: {
@@ -45,21 +44,27 @@ const genericConfig: InitPulumiConfig = {
     namespace,
     port: { containerPort: 80 },
     registrySecret: {
-        name: RegistryName.HarborCR,
+        name: types.RegistryName.HarborCR,
         value: registrySecret,
     },
 };
 
-const appConfiguration = new LambdaK8sConfiguration(genericConfig)
-    .setCertificateCommonName(certCommonName)
-    .createOnePasswordSecret(onepassBasicAuthSecret, basicAuth, {
-        type: SecretType.KubernetesBasicAuth,
-    });
+const appConfiguration = new LambdaK8sConfiguration(
+    genericConfig
+).setCertificateCommonName(certCommonName);
+
+const onepassBasicAuthSecret = Helper.createNameFromMetadata(
+    appConfiguration.values().metadata,
+    "onepass-basic-auth"
+);
+
+appConfiguration.createOnePasswordSecret(onepassBasicAuthSecret, basicAuth, {
+    type: types.SecretType.KubernetesBasicAuth,
+});
 
 const deployment = new LambdaK8SDeployment(appConfiguration)
-    .addTraefikRoute("simple", onepassBasicAuthSecret)
-    .setCertificate("letsencrypt")
-    .createRepository();
+    .addTraefikRoute("simple", { basicAuthSecret: onepassBasicAuthSecret })
+    .setCertificate("letsencrypt");
 
 // Create namespace if necessary
 deployment.createDeployment();
