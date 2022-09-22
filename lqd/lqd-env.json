@@ -1,0 +1,74 @@
+{
+    "$id": "https://lambda-it.ch/lqd-env.schema.json",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Environments",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "envs"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "onePassword": {
+            "type": "array",
+            "description": "A one password object.",
+            "items": {
+                "$ref": "#/$defs/onePasswordItem"
+            }
+        },
+        "envs": {
+            "type": "array",
+            "description": "A normal list of name: value entries for the environment.",
+            "items": {
+                "$ref": "#/$defs/envsItem"
+            }
+        }
+    },
+    "$defs": {
+        "onePasswordItem": {
+            "type": "object",
+            "properties": {
+                "itemUrl": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Specify the URL to the onePassItem, eg: https://start.1password.com/open/i?a=xyz...&v={VAULT_ID}&i={ITEM_ID}&h=..."
+                },
+                "mapping": {
+                    "type": "array",
+                    "description": "The mapping of the onePassItem fields to environment",
+                    "items": {
+                        "$ref": "#/$defs/mapping"
+                    }
+                }
+            }
+        },
+        "mapping": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string",
+                    "description": "The name of the onePassItem field"
+                },
+                "env": {
+                    "type": "string",
+                    "description": "The name of the environment variable name to create, will be title cased"
+                }
+            }
+        },
+        "envsItem": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the environment variable"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "The value of the environment variable, can reference other environment variables (also the ones created by onePassItem)"
+                }
+            }
+        }
+    }
+}
