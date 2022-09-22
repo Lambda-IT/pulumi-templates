@@ -17,7 +17,7 @@ const version = cfg.require("version");
 const namespace = cfg.require("namespace");
 const certCommonName = cfg.require("certificate-common-name");
 const url = cfg.require("url");
-const basicAuth = cfg.require<types.OnePasswordUrl>("onepassword-basic-auth");
+const basicAuth = cfg.get<types.OnePasswordUrl>("onepassword-basic-auth");
 
 const app = "${PROJECT}";
 
@@ -52,28 +52,36 @@ const appConfiguration = new LambdaK8sConfiguration(
     genericConfig
 ).setCertificateCommonName(certCommonName);
 
-const onepassBasicAuthSecret = Helper.createNameFromMetadata(
-    appConfiguration.values().metadata,
-    "onepass-basic-auth"
-);
+let onepassBasicAuthSecret: string | undefined;
 
-appConfiguration.createOnePasswordSecret(onepassBasicAuthSecret, basicAuth, {
-    type: types.SecretType.KubernetesBasicAuth,
-});
+if (basicAuth) {
+    onepassBasicAuthSecret = Helper.createNameFromMetadata(
+        appConfiguration.values().metadata,
+        "onepass-basic-auth"
+    );
+
+    appConfiguration.createOnePasswordSecret(onepassBasicAuthSecret, basicAuth, {
+        type: types.SecretType.KubernetesBasicAuth,
+    });
+}
 
 const deployment = new LambdaK8SDeployment(appConfiguration)
     .addTraefikRoute({
         match: "Host(`" + url + "`)",
         services: [{ port: 80 }],
         middlewares: [
-            {
-                name: `${component}-basic-auth`,
-                spec: {
-                    basicAuth: {
-                        secret: onepassBasicAuthSecret,
-                    },
-                },
-            },
+            ...(basicAuth
+                ? [
+                      {
+                          name: `${component}-basic-auth`,
+                          spec: {
+                              basicAuth: {
+                                  secret: onepassBasicAuthSecret,
+                              },
+                          },
+                      },
+                  ]
+                : []),
         ],
     })
     .setCertificate("letsencrypt");
