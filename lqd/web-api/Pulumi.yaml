@@ -1,0 +1,39 @@
+name: web-api
+runtime: nodejs
+description: A Lambda quick deployment project
+template:
+  config:
+    kubernetes:context:
+      description: On which context will it run
+      default: lambda
+    namespace:
+      description: The k8s namespace used for every resource
+    project:
+      description: The project name used in metadata
+    component:
+      description: The component name used in metadata
+    compress:
+      description: Compress the api responses with gzip
+      default: true
+    container-image:
+      description: The full image path containing the web-app setup without version
+    environments:
+      description: The environments to deploy based on https://sos-ch-dk-2.exo.io/lqd/json/env-schema.json
+    path:
+      description: The path to the web-api
+      default: /api
+    registry-secret:
+      description: The credentials used to connect to the container registry
+      secret: true
+    onepassword-basic-auth:
+      description: The 1Password URL used to connect to get the 1Password Basic Auth Item
+    environment:
+      description: "The environment of the project"
+      default: dev
+    version:
+      description: "The version used for the container image"
+      default: latest
+    url:
+      description: "The url used for the deployment, default: ({project}.app.lambda-it.ch)"
+    certificate-common-name:
+      description: "The common name (CN) used for the certificate, default: ({url})"
