@@ -67,7 +67,9 @@ const apiConfiguration = new LambdaK8sConfiguration(genericConfig)
     });
 
 if (environments) {
-    const parsedEnironments = JSON.parse(environments) as Environments;
+    const parsedEnironments = JSON.parse(
+        Buffer.from(environments, "base64").toString("utf-8")
+    ) as Environments;
     parsedEnironments.onePassword?.forEach((onePassword, i) => {
         apiConfiguration.createOnePasswordSecret(
             `onepass-secret-${i}`,
