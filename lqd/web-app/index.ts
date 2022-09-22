@@ -8,7 +8,6 @@ import * as pulumi from "@pulumi/pulumi";
 
 const cfg = new pulumi.Config();
 
-// Load configuration
 const clusterContext = new pulumi.Config("kubernetes").require("context");
 const environment = cfg.require("environment");
 const project = cfg.require("project");
