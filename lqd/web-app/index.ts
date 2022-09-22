@@ -62,7 +62,20 @@ appConfiguration.createOnePasswordSecret(onepassBasicAuthSecret, basicAuth, {
 });
 
 const deployment = new LambdaK8SDeployment(appConfiguration)
-    .addTraefikRoute("simple", { basicAuthSecret: onepassBasicAuthSecret })
+    .addTraefikRoute({
+        match: "Host(`" + url + "`)",
+        services: [{ port: 80 }],
+        middlewares: [
+            {
+                name: `${component}-basic-auth`,
+                spec: {
+                    basicAuth: {
+                        secret: onepassBasicAuthSecret,
+                    },
+                },
+            },
+        ],
+    })
     .setCertificate("letsencrypt");
 
 // Create namespace if necessary
