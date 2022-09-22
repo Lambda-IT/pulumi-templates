@@ -108,7 +108,7 @@ new LambdaK8SDeployment(apiConfiguration)
             ...(compress
                 ? [
                       {
-                          name: "api-compress",
+                          name: `${component}-api-compress`,
                           spec: {
                               compress: {},
                           },
@@ -118,7 +118,7 @@ new LambdaK8SDeployment(apiConfiguration)
             ...(basicAuth
                 ? [
                       {
-                          name: "basic-auth",
+                          name: `${component}-basic-auth`,
                           spec: {
                               basicAuth: {
                                   secret: onepassBasicAuthSecret,
