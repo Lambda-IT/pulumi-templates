@@ -72,7 +72,7 @@ if (environments) {
     ) as Environments;
     parsedEnironments.onePassword?.forEach((onePassword, i) => {
         apiConfiguration.createOnePasswordSecret(
-            `onepass-secret-${i}`,
+            `${project}-onepass-secret-${app}-${i}`,
             onePassword.itemUrl as types.OnePasswordUrl,
             {
                 envs: onePassword.mapping.map(({ env, field }) => ({
